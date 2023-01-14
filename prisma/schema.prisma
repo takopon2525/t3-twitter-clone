@@ -57,6 +57,8 @@ model User {
     sessions      Session[]
 }
 
+// ここを変更する必要あり！　参考サイトは↓
+// https://www.sitepoint.com/nextjs-prisma-twitter-clone/?utm_source=rss
 model VerificationToken {
     identifier String
     token      String   @unique
