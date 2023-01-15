@@ -1,11 +1,12 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-
+import { Toaster } from "react-hot-toast";
+import Sidebar from "../components/Sidebar";
+import Widget from "../components/Widget";
 import { api } from "../utils/api";
 
 import "../styles/globals.css";
-import { Container } from "../components/Container";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,9 +14,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Container>
-        <Component {...pageProps} />
-      </Container>
+      <div className="mx-auto max-h-screen lg:max-w-6xl">
+        <Toaster />
+        <main className="grid grid-cols-9">
+          <Sidebar />
+          <Component {...pageProps} />
+          <Widget />
+        </main>
+      </div>
     </SessionProvider>
   );
 };
