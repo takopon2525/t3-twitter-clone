@@ -49,3 +49,12 @@ comment tableを用意する
 tweet_id
 text
 created_at
+
+----------------------------
+必要なライブラリの追加
+
+react-hot-toast
+react-icons
+react-timeago
+react-twitter-embed
+
