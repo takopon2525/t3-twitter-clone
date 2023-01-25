@@ -10,24 +10,23 @@ import { useState } from "react";
 import { api } from "../utils/api";
 
 function TweetPost() {
-  const [input, setInput] = useState<string>("");
+  const [text, setText] = useState<string>("");
   const { data: session } = useSession();
   const utils = api.useContext();
 
-  const {} = api.tweet.create.useMutation({
+  const { mutateAsync } = api.tweet.create.useMutation({
     onSuccess: () => {
-      setInput("");
+      setText("");
     },
   });
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    try {
-    } catch (e) {}
+    mutateAsync({ text });
   }
   return (
     <>
-      <form className="mx-2 flex">
+      <form onSubmit={handleSubmit} className="mx-2 flex">
         <img
           src={
             session?.user?.image ||
@@ -38,9 +37,9 @@ function TweetPost() {
         ></img>
         <div className="ml-2 flex-1">
           <textarea
-            value={input}
+            value={text}
             disabled={!session}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             className="h-full w-full rounded-xl pl-2 pt-2 text-xl outline-none placeholder:text-xl"
             placeholder={
               session ? "いまどうしてる？" : "サインインしてください。"
@@ -55,7 +54,7 @@ function TweetPost() {
               <HiOutlineLocationMarker className="h-5 w-5" />
             </div>
             <button
-              disabled={!input || !session}
+              disabled={!text || !session}
               type="submit"
               className="rounded-full bg-sky-400 px-5 py-2 font-bold text-white hover:bg-sky-600 disabled:opacity-40"
             >
