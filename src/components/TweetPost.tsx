@@ -26,22 +26,22 @@ function TweetPost() {
     } catch (e) {}
   }
   return (
-    <div>
-      <img
-        src={
-          session?.user?.image ||
-          "https://images.unsplash.com/photo-1525389999255-82bad487f23c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHVua25vd258ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-        }
-        alt=""
-        className="mt-4 h-14 w-14 rounded-full"
-      ></img>
-      <div>
-        <form>
+    <>
+      <form className="mx-2 flex">
+        <img
+          src={
+            session?.user?.image ||
+            "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+          }
+          alt=""
+          className="h-14 w-14 rounded-full"
+        ></img>
+        <div className="ml-2 flex-1">
           <textarea
             value={input}
             disabled={!session}
             onChange={(e) => setInput(e.target.value)}
-            className="h-full w-full text-xl outline-none placeholder:text-xl"
+            className="h-full w-full rounded-xl pl-2 pt-2 text-xl outline-none placeholder:text-xl"
             placeholder={
               session ? "いまどうしてる？" : "サインインしてください。"
             }
@@ -54,11 +54,17 @@ function TweetPost() {
               <HiOutlineCalendar className="h-5 w-5" />
               <HiOutlineLocationMarker className="h-5 w-5" />
             </div>
-            <button></button>
+            <button
+              disabled={!input || !session}
+              type="submit"
+              className="rounded-full bg-sky-400 px-5 py-2 font-bold text-white hover:bg-sky-600 disabled:opacity-40"
+            >
+              ツイートする
+            </button>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </form>
+    </>
   );
 }
 
