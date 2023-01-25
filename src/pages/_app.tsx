@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Widget from "../components/Widget";
 import { api } from "../utils/api";
-
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "../styles/globals.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -22,6 +22,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <Widget />
         </main>
       </div>
+      <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
   );
 };
