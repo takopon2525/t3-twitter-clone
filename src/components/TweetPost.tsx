@@ -10,7 +10,7 @@ import { useState } from "react";
 import { api } from "../utils/api";
 import Image from "next/image";
 
-function TweetPost() {
+export function TweetPost() {
   const [text, setText] = useState<string>("");
   const { data: session } = useSession();
   const utils = api.useContext();
@@ -18,6 +18,7 @@ function TweetPost() {
   const { mutateAsync } = api.tweet.create.useMutation({
     onSuccess: () => {
       setText("");
+      utils.tweet.timeline.invalidate();
     },
   });
 
@@ -70,5 +71,3 @@ function TweetPost() {
     </div>
   );
 }
-
-export default TweetPost;

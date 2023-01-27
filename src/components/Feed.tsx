@@ -1,6 +1,6 @@
 import React from "react";
 import { Ring } from "@uiball/loaders";
-import TweetPost from "./TweetPost";
+import { TweetPost } from "./TweetPost";
 import { api } from "../utils/api";
 import Tweet from "./Tweet";
 
