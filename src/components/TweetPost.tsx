@@ -26,19 +26,20 @@ function TweetPost() {
     mutateAsync({ text });
   }
   return (
-    <>
-      <form onSubmit={handleSubmit} className="mx-2 mb-14 flex">
+    <div className="flex space-x-2 p-5">
+      <div style={{ width: 48, height: 48, position: "relative" }}>
         <Image
           src={
             session?.user?.image ||
             "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
           }
           alt=""
-          width={48}
-          height={48}
+          fill
           className="rounded-full"
         />
-        <div className="ml-2 flex-1">
+      </div>
+      <div className="flex flex-1">
+        <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
           <textarea
             value={text}
             disabled={!session}
@@ -64,9 +65,9 @@ function TweetPost() {
               ツイートする
             </button>
           </div>
-        </div>
-      </form>
-    </>
+        </form>
+      </div>
+    </div>
   );
 }
 
