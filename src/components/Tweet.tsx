@@ -48,6 +48,30 @@ export function Tweet({
           <p>{tweet.text}</p>
         </div>
       </div>
+      <div className="mt-5 flex justify-between">
+        <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
+          <div className="p-3 hover:rounded-full hover:bg-slate-200">
+            <AiOutlineMessage className="h-5 w-5" />
+          </div>
+          <p>0</p>
+        </div>
+        <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
+          <div className="p-3 hover:rounded-full hover:bg-slate-200">
+            <AiOutlineRetweet className="h-5 w-5" />
+          </div>
+        </div>
+        <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
+          <div className="p-3 hover:rounded-full hover:bg-slate-200">
+            <AiOutlineHeart className="h-5 w-5" />
+          </div>
+          <p>0</p>
+        </div>
+        <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
+          <div className="p-3 hover:rounded-full hover:bg-slate-200">
+            <AiOutlineUpload className="h-5 w-5" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
