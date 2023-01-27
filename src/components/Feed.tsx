@@ -25,7 +25,9 @@ function Feed() {
       </div>
       {/* tweet post */}
       <div>
-        <TweetPost />
+        <div>
+          <TweetPost />
+        </div>
         {/* ここにtimelineの要素を追加 */}
         <div>
           {tweets?.map((tweet) => (

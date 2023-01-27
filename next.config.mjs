@@ -13,5 +13,13 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: [
+      "cloudflare-ipfs.com",
+      "cdn.discordapp.com",
+      "images.unsplash.com",
+      "pbs.twimg.com"
+    ],
+  },
 };
 export default config;

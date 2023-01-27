@@ -8,6 +8,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { api } from "../utils/api";
+import Image from "next/image";
 
 function TweetPost() {
   const [text, setText] = useState<string>("");
@@ -26,15 +27,17 @@ function TweetPost() {
   }
   return (
     <>
-      <form onSubmit={handleSubmit} className="mx-2 flex">
-        <img
+      <form onSubmit={handleSubmit} className="mx-2 mb-14 flex">
+        <Image
           src={
             session?.user?.image ||
             "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
           }
           alt=""
-          className="h-14 w-14 rounded-full"
-        ></img>
+          width={48}
+          height={48}
+          className="rounded-full"
+        />
         <div className="ml-2 flex-1">
           <textarea
             value={text}
@@ -46,7 +49,7 @@ function TweetPost() {
             }
           />
           <div className="flex">
-            <div className="text-twitter flex flex-1 space-x-2">
+            <div className="flex flex-1 space-x-2">
               <HiOutlinePhotograph className="h-5 w-5" />
               <HiOutlineSearchCircle className="h-5 w-5" />
               <HiOutlineEmojiHappy className="h-5 w-5" />
