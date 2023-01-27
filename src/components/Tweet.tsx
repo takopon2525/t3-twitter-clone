@@ -25,15 +25,16 @@ export function Tweet({
   return (
     <div className="flex cursor-pointer flex-col space-x-3 border-y border-gray-100 p-5 hover:bg-slate-100">
       {/* ここにLinkボタンを配置予定 */}
-      <div>
+      <div className="flex space-x-3">
         {tweet.author.image && (
-          <Image
-            src={tweet.author.image}
-            alt={`${tweet.author.name} profile picture`}
-            width={48}
-            height={48}
-            className="rounded-full"
-          />
+          <div style={{ width: 48, height: 48, position: "relative" }}>
+            <Image
+              src={tweet.author.image}
+              alt={`${tweet.author.name} profile picture`}
+              fill
+              className="rounded-full"
+            />
+          </div>
         )}
         <div>
           <div className="flex items-center space-x-3">
