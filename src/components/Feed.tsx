@@ -2,6 +2,7 @@ import React from "react";
 import { Ring } from "@uiball/loaders";
 import TweetPost from "./TweetPost";
 import { api } from "../utils/api";
+import Tweet from "./Tweet";
 
 const Timeline_Limit = 10;
 
@@ -13,7 +14,9 @@ function Feed() {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
-  console.log(data?.pages);
+  // Nestになったオブジェクトのため
+  console.log(hasNextPage, fetchNextPage, isFetching, isLoading);
+  const tweets = data?.pages.flatMap((page) => page.tweets);
   // dataは取得できている。ここから、取得した値を元に色々とカスタム
   return (
     <div>
@@ -24,6 +27,11 @@ function Feed() {
       <div>
         <TweetPost />
         {/* ここにtimelineの要素を追加 */}
+        <div>
+          {tweets?.map((tweet) => (
+            <Tweet tweet={tweet} />
+          ))}
+        </div>
       </div>
     </div>
   );
