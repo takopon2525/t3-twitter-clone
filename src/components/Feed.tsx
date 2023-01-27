@@ -31,7 +31,7 @@ function Feed() {
         {/* ここにtimelineの要素を追加 */}
         <div>
           {tweets?.map((tweet) => (
-            <Tweet tweet={tweet} />
+            <Tweet tweet={tweet} key={tweet.id} />
           ))}
         </div>
       </div>

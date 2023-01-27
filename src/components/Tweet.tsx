@@ -21,6 +21,7 @@ export function Tweet({
 }: {
   tweet: RouterOutputs["tweet"]["timeline"]["tweets"][number];
 }) {
+  const formatter = buildFormatter(japanStrings);
   return (
     <div className="flex cursor-pointer flex-col space-x-3 border-y border-gray-100 p-5 hover:bg-slate-100">
       {/* ここにLinkボタンを配置予定 */}
@@ -34,6 +35,17 @@ export function Tweet({
             className="rounded-full"
           />
         )}
+        <div>
+          <div className="flex items-center space-x-3">
+            <p className="font-bold">{tweet.author.name}</p>
+            <TimeAgo
+              className="text-sm text-gray-500"
+              date={tweet.createdAt}
+              formatter={formatter}
+            />
+          </div>
+          <p>{tweet.text}</p>
+        </div>
       </div>
     </div>
   );
