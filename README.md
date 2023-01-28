@@ -64,10 +64,23 @@ react-twitter-embed
 
 ## 参考記事
 
+ここからは参考記事について書いておく。
+
+## zodに関して
+
 zod のエラー関連
-// 参考：https://zenn.dev/ynakamura/articles/65d58863563fbc
-// https://zenn.dev/catnose99/scraps/081321b966fdf8
-// https://zenn.dev/uttk/articles/bd264fa884e026#.safeparse()
+[Zodで真のTypeScript firstを手にする](https://zenn.dev/ynakamura/articles/65d58863563fbc)
+[tRPCのinputでZodのバリデーションエラーを使ったときのエラーメッセージをいい感じにする](https://zenn.dev/catnose99/scraps/081321b966fdf8)
+[TypeScriptのゾッとする話 ~ Zodの紹介 ~](https://zenn.dev/uttk/articles/bd264fa884e026#.safeparse)
 
 TweePost.tsxのtweetSchema.parse({ text });で
 ({text})部分がなかったためにtry catchに入らなかった。
+
+##　TypeScriptの型安全に関して
+
+配列から型を生成する類の芸当を行う際に使う。
+[通貨の配列から通貨の型を作りたい](https://typescriptbook.jp/tips/generates-type-from-array)
+
+## Prisma.jsの値を取得してくるところでハマったところ
+
+[JavaScriptの配列のネストを解除するflat()とflatMap()メソッド](https://devsakaso.com/javascript-flat-flatmap-methods/)
