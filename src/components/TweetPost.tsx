@@ -29,6 +29,7 @@ export function TweetPost() {
       utils.tweet.timeline.invalidate();
     },
     onError: (e: any) => {
+      // ここでエラーを設定することも可能だが、今回は設定しない。catnote
       console.log("onError", e);
       // setError(e)
     },
