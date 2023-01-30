@@ -3,10 +3,17 @@ import { Ring } from "@uiball/loaders";
 import { TweetPost } from "./TweetPost";
 import { api } from "../utils/api";
 import Tweet from "./Tweet";
+import { useScrollPosition } from "../hooks/useScrollPosition";
+import { useEffect, useState } from "react";
 
 const Timeline_Limit = 10;
 
 function Feed() {
+  // scrollポジションを取ってくるコードをhookにした。
+  const scrollPosition = useScrollPosition();
+  // tanstackQueryに詳細は記載されている。
+  // data.pagesで返ってくる。hasnextPageは次のぺージの値。isFetchingはfetch中。isLoadingはisFetchingがあれば不要かも
+  // fetchNextPage()はコールバック関数。これを呼び出すことで、次のぺージ結果呼ばれる。
   const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
     api.tweet.timeline.useInfiniteQuery(
       { limit: Timeline_Limit },
@@ -18,6 +25,12 @@ function Feed() {
   console.log(hasNextPage, fetchNextPage, isFetching, isLoading);
   const tweets = data?.pages.flatMap((page) => page.tweets);
   // dataは取得できている。ここから、取得した値を元に色々とカスタム
+  useEffect(() => {
+    if (scrollPosition > 90 && hasNextPage && !isFetching) {
+      fetchNextPage();
+    }
+  }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
+
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -33,6 +46,7 @@ function Feed() {
           {tweets?.map((tweet) => (
             <Tweet tweet={tweet} key={tweet.id} />
           ))}
+          {!hasNextPage && <p>最後のツイートです。</p>}
         </div>
       </div>
     </div>

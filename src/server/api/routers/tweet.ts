@@ -53,6 +53,7 @@ export const tweetRouter = createTRPCRouter({
             createdAt: "desc",
           },
         ],
+        cursor: cursor ? { id: cursor } : undefined,
         include: {
           author: {
             select: {
