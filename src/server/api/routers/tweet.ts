@@ -38,23 +38,28 @@ export const tweetRouter = createTRPCRouter({
   timeline: publicProcedure
     .input(
       z.object({
-        where: z.object({
-          author: z
-            .object({
-              name: z.string().optional(),
-            })
-            .optional(),
-        }),
+        where: z
+          .object({
+            author: z
+              .object({
+                name: z.string().optional(),
+              })
+              .optional(),
+          })
+          .optional(),
         cursor: z.string().nullish(),
         limit: z.number().min(1).max(100).default(10),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma } = ctx;
-      const { cursor, limit } = input;
+      const { cursor, limit, where } = input;
+
       const userId = ctx.session?.user?.id;
+
       const tweets = await prisma.tweet.findMany({
         take: limit + 1,
+        where,
         orderBy: [
           {
             createdAt: "desc",
@@ -86,12 +91,17 @@ export const tweetRouter = createTRPCRouter({
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
+
       if (tweets.length > limit) {
         const nextItem = tweets.pop() as (typeof tweets)[number];
         // https://typescriptbook.jp/tips/generates-type-from-array
         nextCursor = nextItem.id;
       }
-      return { tweets, nextCursor };
+
+      return {
+        tweets,
+        nextCursor,
+      };
     }),
   like: protectedProcedure
     .input(z.object({ tweetId: z.string() }))
