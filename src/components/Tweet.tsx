@@ -91,29 +91,32 @@ export function Tweet({
   return (
     <div className="flex cursor-pointer flex-col space-x-3 border-y border-gray-100 p-5 hover:bg-slate-100">
       {/* ここにLinkボタンを配置予定 */}
-      <div className="flex space-x-3">
-        {tweet.author.image && (
-          <div style={{ width: 48, height: 48, position: "relative" }}>
-            <Image
-              src={tweet.author.image}
-              alt={`${tweet.author.name} profile picture`}
-              fill
-              className="rounded-full"
-            />
+      <Link href={`/${tweet.author.name}`}>
+        <div className="flex space-x-3">
+          {tweet.author.image && (
+            <div style={{ width: 48, height: 48, position: "relative" }}>
+              <Image
+                src={tweet.author.image}
+                alt={`${tweet.author.name} profile picture`}
+                fill
+                className="rounded-full"
+              />
+            </div>
+          )}
+          <div>
+            <div className="flex items-center space-x-3">
+              <p className="font-bold">{tweet.author.name}</p>
+              <TimeAgo
+                className="text-sm text-gray-500"
+                date={tweet.createdAt}
+                formatter={formatter}
+              />
+            </div>
+            <p>{tweet.text}</p>
           </div>
-        )}
-        <div>
-          <div className="flex items-center space-x-3">
-            <p className="font-bold">{tweet.author.name}</p>
-            <TimeAgo
-              className="text-sm text-gray-500"
-              date={tweet.createdAt}
-              formatter={formatter}
-            />
-          </div>
-          <p>{tweet.text}</p>
         </div>
-      </div>
+      </Link>
+
       <div className="mt-5 flex justify-between">
         <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
           <div className="p-3 hover:rounded-full hover:bg-slate-200">

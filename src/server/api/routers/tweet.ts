@@ -38,6 +38,13 @@ export const tweetRouter = createTRPCRouter({
   timeline: publicProcedure
     .input(
       z.object({
+        where: z.object({
+          author: z
+            .object({
+              name: z.string().optional(),
+            })
+            .optional(),
+        }),
         cursor: z.string().nullish(),
         limit: z.number().min(1).max(100).default(10),
       })
