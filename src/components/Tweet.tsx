@@ -13,15 +13,81 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { Ring } from "@uiball/loaders";
-import { RouterOutputs } from "../utils/api";
+import { api, RouterInputs, RouterOutputs } from "../utils/api";
 import Image from "next/image";
+import { InfiniteData, QueryClient } from "@tanstack/react-query";
+
+function updateCache({
+  client,
+  variables,
+  data,
+  action,
+  input,
+}: {
+  client: QueryClient;
+  input: RouterInputs["tweet"]["timeline"];
+  variables: { tweetId: string };
+  data: { userId: string };
+  action: "like" | "unlike";
+}) {
+  client.setQueryData(
+    [
+      ["tweet", "timeline"],
+      {
+        input,
+        type: "infinite",
+      },
+    ],
+    (oldData) => {
+      const newData = oldData as InfiniteData<
+        RouterOutputs["tweet"]["timeline"]
+      >;
+      const value = action === "like" ? 1 : -1;
+      const newTweets = newData.pages.map((page) => {
+        return {
+          tweets: page.tweets.map((tweet: any) => {
+            if (tweet.id === variables.tweetId) {
+              return {
+                ...tweet,
+                likes: action === "like" ? [data.userId] : [],
+                _count: {
+                  likes: tweet._count.likes + value,
+                },
+              };
+            }
+            return tweet;
+          }),
+        };
+      });
+      return {
+        ...newData,
+        pages: newTweets,
+      };
+    }
+  );
+}
 
 export function Tweet({
   tweet,
+  client,
+  input,
 }: {
   tweet: RouterOutputs["tweet"]["timeline"]["tweets"][number];
+  client: QueryClient;
+  input: RouterInputs["tweet"]["timeline"];
 }) {
   const formatter = buildFormatter(japanStrings);
+  const likeMutation = api.tweet.like.useMutation({
+    onSuccess: (data, variables) => {
+      updateCache({ client, data, variables, input, action: "like" });
+    },
+  }).mutateAsync;
+  const unlikeMutation = api.tweet.unlike.useMutation({
+    onSuccess: (data, variables) => {
+      updateCache({ client, data, variables, input, action: "unlike" });
+    },
+  }).mutateAsync;
+  const hasLiked = tweet.likes.length > 0;
   return (
     <div className="flex cursor-pointer flex-col space-x-3 border-y border-gray-100 p-5 hover:bg-slate-100">
       {/* ここにLinkボタンを配置予定 */}
@@ -62,9 +128,25 @@ export function Tweet({
         </div>
         <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
           <div className="p-3 hover:rounded-full hover:bg-slate-200">
-            <AiOutlineHeart className="h-5 w-5" />
+            <AiOutlineHeart
+              className="h-5 w-5"
+              color={hasLiked ? "red" : "gray"}
+              onClick={() => {
+                if (hasLiked) {
+                  if (hasLiked) {
+                    unlikeMutation({
+                      tweetId: tweet.id,
+                    });
+                    return;
+                  }
+                }
+                likeMutation({
+                  tweetId: tweet.id,
+                });
+              }}
+            />
           </div>
-          <p>0</p>
+          <span className="text-sm text-gray-500">{tweet._count.likes}</span>
         </div>
         <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
           <div className="p-3 hover:rounded-full hover:bg-slate-200">

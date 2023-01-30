@@ -5,6 +5,7 @@ import { api } from "../utils/api";
 import Tweet from "./Tweet";
 import { useScrollPosition } from "../hooks/useScrollPosition";
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Timeline_Limit = 10;
 
@@ -31,6 +32,7 @@ function Feed() {
     }
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
+  const client = useQueryClient();
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -44,7 +46,12 @@ function Feed() {
         {/* ここにtimelineの要素を追加 */}
         <div>
           {tweets?.map((tweet) => (
-            <Tweet tweet={tweet} key={tweet.id} />
+            <Tweet
+              tweet={tweet}
+              key={tweet.id}
+              client={client}
+              input={{ limit: Timeline_Limit }}
+            />
           ))}
           {!hasNextPage && <p>最後のツイートです。</p>}
         </div>
