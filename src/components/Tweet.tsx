@@ -164,13 +164,19 @@ export function Tweet({
         </div>
       </div>
       {commentBoxVisible && (
-        <form>
+        <form className="mt-3 flex space-x-3">
           <input
             value={inputCommentText}
             onChange={(e) => setInputCommentText(e.target.value)}
+            className="flex-1 rounded-md bg-gray-100 p-2 outline-none"
+            placeholder="返信をツイート"
           />
-          <button disabled={!inputCommentText} type="submit">
-            Post
+          <button
+            disabled={!inputCommentText}
+            type="submit"
+            className="rounded-full bg-sky-400 px-5 py-2 font-bold text-white hover:bg-sky-600 disabled:opacity-40"
+          >
+            返信
           </button>
         </form>
       )}
