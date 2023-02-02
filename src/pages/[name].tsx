@@ -13,7 +13,7 @@ export default function UserPage() {
       <Head>
         <title>{router.query.id}</title>
       </Head>
-      <Feed where={{ author: { name } }} />
+      <Feed where={{ author: { name } }} />      
     </div>
   );
 }

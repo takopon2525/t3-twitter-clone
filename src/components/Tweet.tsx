@@ -77,6 +77,9 @@ export function Tweet({
   input: RouterInputs["tweet"]["timeline"];
 }) {
   const formatter = buildFormatter(japanStrings);
+  const { data: session } = useSession();
+  const [commentBoxVisible, setCommentBoxVisible] = useState<boolean>(false);
+  const [inputCommentText, setInputCommentText] = useState("");
   const likeMutation = api.tweet.like.useMutation({
     onSuccess: (data, variables) => {
       updateCache({ client, data, variables, input, action: "like" });
@@ -118,7 +121,10 @@ export function Tweet({
       </Link>
 
       <div className="mt-5 flex justify-between">
-        <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
+        <div
+          onClick={(e) => session && setCommentBoxVisible(!commentBoxVisible)}
+          className="flex cursor-pointer items-center space-x-3 text-gray-400"
+        >
           <div className="p-3 hover:rounded-full hover:bg-slate-200">
             <AiOutlineMessage className="h-5 w-5" />
           </div>
@@ -157,6 +163,17 @@ export function Tweet({
           </div>
         </div>
       </div>
+      {commentBoxVisible && (
+        <form>
+          <input
+            value={inputCommentText}
+            onChange={(e) => setInputCommentText(e.target.value)}
+          />
+          <button disabled={!inputCommentText} type="submit">
+            Post
+          </button>
+        </form>
+      )}
     </div>
   );
 }
