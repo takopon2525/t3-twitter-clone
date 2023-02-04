@@ -16,6 +16,7 @@ import { Ring } from "@uiball/loaders";
 import { api, RouterInputs, RouterOutputs } from "../utils/api";
 import Image from "next/image";
 import { InfiniteData, QueryClient } from "@tanstack/react-query";
+import { tweetSchema } from "./TweetPost";
 
 function updateCache({
   client,
@@ -80,6 +81,7 @@ export function Tweet({
   const { data: session } = useSession();
   const [commentBoxVisible, setCommentBoxVisible] = useState<boolean>(false);
   const [inputCommentText, setInputCommentText] = useState("");
+  const utils = api.useContext();
   const likeMutation = api.tweet.like.useMutation({
     onSuccess: (data, variables) => {
       updateCache({ client, data, variables, input, action: "like" });
@@ -91,6 +93,23 @@ export function Tweet({
     },
   }).mutateAsync;
   const hasLiked = tweet.likes.length > 0;
+  const commenMutation = api.tweet.commet.useMutation({
+    onSuccess: () => {
+      setInputCommentText("");
+      utils.tweet.timeline.invalidate();
+    },
+  }).mutateAsync;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      tweetSchema.parse({ text:inputCommentText });
+    } catch (e) {
+      alert('error occurred!')
+      return;
+    }
+    commenMutation({ text: inputCommentText, tweetId: tweet.id });
+  };
   return (
     <div className="flex cursor-pointer flex-col space-x-3 border-y border-gray-100 p-5 hover:bg-slate-100">
       {/* ここにLinkボタンを配置予定 */}
@@ -164,7 +183,7 @@ export function Tweet({
         </div>
       </div>
       {commentBoxVisible && (
-        <form className="mt-3 flex space-x-3">
+        <form className="mt-3 flex space-x-3" onSubmit={handleSubmit}>
           <input
             value={inputCommentText}
             onChange={(e) => setInputCommentText(e.target.value)}

@@ -138,4 +138,34 @@ export const tweetRouter = createTRPCRouter({
         },
       });
     }),
+  commet: protectedProcedure
+    .input(
+      z.object({
+        tweetId: z.string(),
+        text: z
+          .string({ required_error: "コメントは10文字以上140文字以内です！" })
+          .min(10)
+          .max(140),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { tweetId, text } = input;
+      const userId = session.user.id;
+      return prisma.comment.create({
+        data: {
+          text,
+          tweet: {
+            connect: {
+              id: tweetId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
+    }),
 });
