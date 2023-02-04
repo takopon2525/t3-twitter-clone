@@ -26,8 +26,9 @@ function Feed({
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
+  console.log(data);
   // Nestになったオブジェクトのため
-  console.log(hasNextPage, fetchNextPage, isFetching, isLoading);
+  // console.log(hasNextPage, fetchNextPage, isFetching, isLoading);
   const tweets = data?.pages.flatMap((page) => page.tweets);
   // dataは取得できている。ここから、取得した値を元に色々とカスタム
   useEffect(() => {

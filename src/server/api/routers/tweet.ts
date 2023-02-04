@@ -75,6 +75,23 @@ export const tweetRouter = createTRPCRouter({
               userId: true,
             },
           },
+          comments: {
+            select: {
+              text: true,
+              user: {
+                select: {
+                  name: true,
+                  image: true,
+                  id: true,
+                },
+              },
+            },
+            orderBy: [
+              {
+                createdAt: "desc",
+              },
+            ],
+          },
           author: {
             select: {
               name: true,
