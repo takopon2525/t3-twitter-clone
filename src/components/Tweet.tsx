@@ -219,6 +219,7 @@ export function Tweet({
                   <TimeAgo
                     className="text-sm text-gray-500"
                     date={comment.createdAt}
+                    formatter={formatter}
                   />
                 </div>
                 <p>{comment.text}</p>
