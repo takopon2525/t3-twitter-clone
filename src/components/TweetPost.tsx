@@ -12,9 +12,9 @@ import Image from "next/image";
 import { object, string } from "zod";
 
 export const tweetSchema = object({
-  text: string({ required_error: "ツイートを入力してください。" })
-    .min(10)
-    .max(140),
+  text: string()
+    .min(10, "10文字以上で入力してください。")
+    .max(140, "140文字以内で入力してください。"),
 });
 
 export function TweetPost() {

@@ -9,7 +9,7 @@ import japanStrings from "react-timeago/lib/language-strings/ja";
 import buildFormatter from "react-timeago/lib/formatters/buildFormatter";
 import React from "react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { Ring } from "@uiball/loaders";
@@ -106,8 +106,8 @@ export function Tweet({
     const notification = toast.loading("ツイートを投稿しています。");
     try {
       tweetSchema.parse({ text: inputCommentText });
-    } catch (e) {
-      toast.error("コメントの投稿に失敗しました。", {
+    } catch (e:any) {
+      toast.error(`${e.flatten().fieldErrors.text}`, {
         id: notification,
       });
       return;
