@@ -82,6 +82,7 @@ export function Tweet({
   const [commentBoxVisible, setCommentBoxVisible] = useState<boolean>(false);
   const [inputCommentText, setInputCommentText] = useState("");
   const utils = api.useContext();
+
   const likeMutation = api.tweet.like.useMutation({
     onSuccess: (data, variables) => {
       updateCache({ client, data, variables, input, action: "like" });
@@ -102,13 +103,19 @@ export function Tweet({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const notification = toast.loading("ツイートを投稿しています。");
     try {
       tweetSchema.parse({ text: inputCommentText });
     } catch (e) {
-      alert("error occurred!");
+      toast.error("コメントの投稿に失敗しました。", {
+        id: notification,
+      });
       return;
     }
     commenMutation({ text: inputCommentText, tweetId: tweet.id });
+    toast.success("コメントの投稿に成功しました。", {
+      id: notification,
+    });
   };
   return (
     <div className="flex cursor-pointer flex-col space-x-3 border-y border-gray-100 p-5 hover:bg-slate-100">
@@ -147,7 +154,7 @@ export function Tweet({
           <div className="p-3 hover:rounded-full hover:bg-slate-200">
             <AiOutlineMessage className="h-5 w-5" />
           </div>
-          <p>0</p>
+          <p>{tweet.comments.length}</p>
         </div>
         <div className="flex cursor-pointer items-center space-x-3 text-gray-400">
           <div className="p-3 hover:rounded-full hover:bg-slate-200">
@@ -199,7 +206,7 @@ export function Tweet({
           </button>
         </form>
       )}
-      {tweet.comments?.length > 0 && (
+      {commentBoxVisible && tweet.comments?.length > 0 && (
         <div className="my-2 mt-5 max-h-44 space-y-5 overflow-y-scroll border-t border-gray-100 p-5">
           {tweet.comments.map((comment) => (
             <div key={comment.id} className="relative flex space-x-2">
