@@ -10,6 +10,7 @@ import { useState } from "react";
 import { api } from "../utils/api";
 import Image from "next/image";
 import { object, string } from "zod";
+import toast from "react-hot-toast";
 
 export const tweetSchema = object({
   text: string()
@@ -19,7 +20,6 @@ export const tweetSchema = object({
 
 export function TweetPost() {
   const [text, setText] = useState<string>("");
-  const [error, setError] = useState("");
   const { data: session } = useSession();
   const utils = api.useContext();
 
@@ -28,23 +28,23 @@ export function TweetPost() {
       setText("");
       utils.tweet.timeline.invalidate();
     },
-    onError: (e: any) => {
-      // ここでエラーを設定することも可能だが、今回は設定しない。catnote
-      console.log("onError", e);
-      // setError(e)
-    },
   });
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const notification = toast.loading("ツイートを投稿しています。");
     try {
       tweetSchema.parse({ text });
     } catch (e: any) {
-      console.log(e);
-      setError(e);
+      toast.error(`${e.flatten().fieldErrors.text}`, {
+        id: notification,
+      });
       return;
     }
     mutateAsync({ text });
+    toast.success("ツイートの投稿に成功しました。", {
+      id: notification,
+    });
   }
   return (
     <>
