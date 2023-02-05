@@ -204,14 +204,20 @@ export function Tweet({
           {tweet.comments.map((comment) => (
             <div key={comment.id} className="relative flex space-x-2">
               <hr className="border-twitter/30 absolute left-5 top-10 h-8 border-x" />
-              <img
-                src={comment.user.image}
-                className="mt-2 h-7 w-7 rounded-full object-cover"
-                alt=""
-              />
+              <div style={{ width: 48, height: 48, position: "relative" }}>
+                <Image
+                  src={
+                    comment.user?.image ||
+                    "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+                  }
+                  className="rounded-full"
+                  alt="profile picture"
+                  fill
+                />
+              </div>
               <div>
                 <div className="flex items-center space-x-1">
-                  <p className="mr-1 font-bold">{comment.username}</p>
+                  <p className="mr-1 font-bold">{comment.user.name}</p>
                   <p className="hidden text-sm text-gray-500 lg:inline">
                     @{comment.user.name}
                   </p>
