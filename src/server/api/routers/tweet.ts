@@ -78,6 +78,8 @@ export const tweetRouter = createTRPCRouter({
           comments: {
             select: {
               text: true,
+              id: true,
+              createdAt: true,
               user: {
                 select: {
                   name: true,
