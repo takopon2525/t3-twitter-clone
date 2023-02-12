@@ -38,22 +38,62 @@ export const tweetRouter = createTRPCRouter({
   timeline: publicProcedure
     .input(
       z.object({
+        where: z
+          .object({
+            author: z
+              .object({
+                name: z.string().optional(),
+              })
+              .optional(),
+          })
+          .optional(),
         cursor: z.string().nullish(),
         limit: z.number().min(1).max(100).default(10),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma } = ctx;
-      const { cursor, limit } = input;
+      const { cursor, limit, where } = input;
+
       const userId = ctx.session?.user?.id;
+
       const tweets = await prisma.tweet.findMany({
         take: limit + 1,
+        where,
         orderBy: [
           {
             createdAt: "desc",
           },
         ],
+        cursor: cursor ? { id: cursor } : undefined,
         include: {
+          likes: {
+            where: {
+              userId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+          comments: {
+            select: {
+              text: true,
+              id: true,
+              createdAt: true,
+              user: {
+                select: {
+                  name: true,
+                  image: true,
+                  id: true,
+                },
+              },
+            },
+            orderBy: [
+              {
+                createdAt: "desc",
+              },
+            ],
+          },
           author: {
             select: {
               name: true,
@@ -61,15 +101,90 @@ export const tweetRouter = createTRPCRouter({
               id: true,
             },
           },
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
         },
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
+
       if (tweets.length > limit) {
         const nextItem = tweets.pop() as (typeof tweets)[number];
         // https://typescriptbook.jp/tips/generates-type-from-array
         nextCursor = nextItem.id;
       }
-      return { tweets, nextCursor };
+
+      return {
+        tweets,
+        nextCursor,
+      };
+    }),
+  like: protectedProcedure
+    .input(z.object({ tweetId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { prisma } = ctx;
+
+      return prisma.like.create({
+        data: {
+          tweet: {
+            connect: {
+              id: input.tweetId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
+    }),
+  unlike: protectedProcedure
+    .input(z.object({ tweetId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { prisma } = ctx;
+      return prisma.like.delete({
+        where: {
+          tweetId_userId: {
+            tweetId: input.tweetId,
+            userId,
+          },
+        },
+      });
+    }),
+  commet: protectedProcedure
+    .input(
+      z.object({
+        tweetId: z.string(),
+        text: z
+          .string({ required_error: "コメントは10文字以上140文字以内です！" })
+          .min(10)
+          .max(140),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { tweetId, text } = input;
+      const userId = session.user.id;
+      return prisma.comment.create({
+        data: {
+          text,
+          tweet: {
+            connect: {
+              id: tweetId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
     }),
 });

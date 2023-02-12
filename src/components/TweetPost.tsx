@@ -10,16 +10,16 @@ import { useState } from "react";
 import { api } from "../utils/api";
 import Image from "next/image";
 import { object, string } from "zod";
+import toast from "react-hot-toast";
 
 export const tweetSchema = object({
-  text: string({ required_error: "ツイートを入力してください。" })
-    .min(10)
-    .max(140),
+  text: string()
+    .min(10, "10文字以上で入力してください。")
+    .max(140, "140文字以内で入力してください。"),
 });
 
 export function TweetPost() {
   const [text, setText] = useState<string>("");
-  const [error, setError] = useState("");
   const { data: session } = useSession();
   const utils = api.useContext();
 
@@ -28,22 +28,23 @@ export function TweetPost() {
       setText("");
       utils.tweet.timeline.invalidate();
     },
-    onError: (e: any) => {
-      console.log("onError", e);
-      // setError(e)
-    },
   });
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const notification = toast.loading("ツイートを投稿しています。");
     try {
       tweetSchema.parse({ text });
     } catch (e: any) {
-      console.log(e);
-      setError(e);
+      toast.error(`${e.flatten().fieldErrors.text}`, {
+        id: notification,
+      });
       return;
     }
     mutateAsync({ text });
+    toast.success("ツイートの投稿に成功しました。", {
+      id: notification,
+    });
   }
   return (
     <>

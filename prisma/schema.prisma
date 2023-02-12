@@ -56,8 +56,8 @@ model User {
     accounts      Account[]
     sessions      Session[]
     tweet         Tweet[]
-    like          Like[]
-    comment       Comment[]
+    likes         Like[]
+    comments      Comment[]
 }
 
 // ここを変更する必要あり！　参考サイトは↓
@@ -77,8 +77,8 @@ model Tweet {
     authorId  String
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    like      Like[]
-    comment   Comment[]
+    likes     Like[]
+    comments  Comment[]
 }
 
 model Like {
@@ -108,6 +108,4 @@ model Comment {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    @@unique([tweetId, userId])
 }
